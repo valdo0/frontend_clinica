@@ -1,0 +1,21 @@
+<div class="container">
+  <h2>Asignar Laboratorio</h2>
+  <form #asignarForm="ngForm" (ngSubmit)="asignarLab(asignarForm)">
+    <div class="mb-3">
+      <label class="form-label">Laboratorio</label>
+      <select class="form-select" required [(ngModel)]="laboratorioSeleccionado" name="laboratorio">
+        <option value="" disabled selected>Seleccione laboratorio</option>
+        <option *ngFor="let lab of laboratorios">{{ lab }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Usuario</label>
+      <select class="form-select" required [(ngModel)]="usuario" name="usuario">
+        <option value="" disabled selected>Seleccione usuario</option>
+        <option *ngFor="let u of usuarios">{{ u }}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Asignar</button>
+    <a routerLink="/laboratorios/lista" class="btn btn-secondary ms-2">Cancelar</a>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+<div class="container">
+  <h2>Agregar Laboratorio</h2>
+  <form #labForm="ngForm" (ngSubmit)="agregarLab(labForm)">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre del Laboratorio</label>
+      <input type="text" id="nombre" name="nombre" class="form-control" required [(ngModel)]="nombre">
+    </div>
+    <div class="mb-3">
+      <label for="ubicacion" class="form-label">Ubicación</label>
+      <input type="text" id="ubicacion" name="ubicacion" class="form-control" required [(ngModel)]="ubicacion">
+    </div>
+    <button type="submit" class="btn btn-success">Agregar</button>
+    <a routerLink="/laboratorios/lista" class="btn btn-secondary ms-2">Cancelar</a>
+  </form>
+</div>

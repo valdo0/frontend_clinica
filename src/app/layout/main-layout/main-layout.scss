@@ -1,0 +1,32 @@
+.app-container {
+  min-height: 100vh; // asegura que ocupe toda la pantalla
+  flex-wrap: nowrap;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // para que el footer siempre quede abajo
+}
+
+main {
+  flex-grow: 1;
+  overflow: auto; // scroll solo en contenido
+}
+
+app-footer {
+  background: #f8f9fa;
+  text-align: center;
+  width: 100%; // ahora ocupa todo el ancho disponible
+}
+
+@media (max-width: 991px) {
+  .app-container {
+    flex-direction: column; // sidebar arriba, contenido abajo en móviles
+  }
+
+  app-sidebar {
+    width: 100%; // sidebar full width en móviles
+    min-height: auto; // que no llene toda la pantalla si es colapsable
+  }
+}

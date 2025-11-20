@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],

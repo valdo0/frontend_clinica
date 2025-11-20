@@ -1,0 +1,80 @@
+<div class="min-vh-100 d-flex flex-column flex-lg-row">
+
+  <!-- Panel decorativo (solo en lg+) -->
+  <div class="d-none d-lg-flex col-lg-5 bg-primary text-white p-5 position-relative">
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTE9ItoquODWCARhInxnNrQVINkCFJCpfSJt7_-8SfK63ZBt_FiPDSYJKm4vx5g9Qaw9_fqd3v46y7Unnp1j3gtm3n5U0aBiFpFQzlJDSGnoX6B3b-znLv1Vm9vWopS6Vft6HXFFmIYz-2gOdu9mWpgjPjTOKeBJnYWVuwRtpDg6PD9npWVIHCEbmdRlzbu9392dF1M_nElqEPIVRHTR8scKj-7HjpziyEk1aW90hTqxPZDGTOWJ6s7SBi6qAhr5gimf2gIUk-mbE'); background-size: cover; opacity: 0.1;"></div>
+    <div class="position-relative z-2">
+      <div class="d-flex align-items-center mb-4">
+        <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center" style="width:50px; height:50px;">
+          <span class="material-symbols-outlined fs-3">science</span>
+        </div>
+        <h2 class="ms-3 fw-bold">LabManager Pro</h2>
+      </div>
+      <h1 class="display-5 fw-bold">Precisión. Datos. Resultados.</h1>
+      <p>Bienvenido al centro neurálgico para la gestión de laboratorios. Acceda a sus datos de forma segura y eficiente.</p>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <div class="col-12 col-lg-7 d-flex align-items-center justify-content-center p-5 bg-light">
+    <div class="w-100" style="max-width: 480px;">
+      <h1 class="mb-2 text-center">Inicie sesión</h1>
+      <p class="text-center text-muted mb-4">Ingrese sus credenciales para acceder al sistema.</p>
+
+      <form [formGroup]="form" (ngSubmit)="ingresar()" class="d-flex flex-column gap-3">
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input formControlName="email" type="email" class="form-control" [ngClass]="{'is-invalid': form.controls.email.invalid && form.controls.email.touched}" placeholder="Ingrese su email">
+          <div class="invalid-feedback" *ngIf="form.controls.email.invalid && form.controls.email.touched">
+            Email inválido
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3 position-relative">
+          <label class="form-label d-flex justify-content-between">
+            Contraseña
+            <a routerLink="/auth/recuperar-password" class="text-primary small">¿Olvidaste tu contraseña?</a>
+          </label>
+          <div class="input-group">
+            <input
+              formControlName="password"
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              [ngClass]="{'is-invalid': form.controls.password.invalid && form.controls.password.touched}"
+              placeholder="Ingrese su contraseña"
+            >
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="togglePassword()"
+              tabindex="-1"
+            >
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+            <div class="invalid-feedback" *ngIf="form.controls.password.invalid && form.controls.password.touched">
+              La contraseña debe tener al menos 8 caracteres
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Iniciar Sesión</button>
+
+        <!-- Registro -->
+        <p class="text-center mt-3 text-muted small">
+          ¿Aún no tienes cuenta? 
+          <a routerLink="/auth/registro" class="text-primary">Regístrate</a>
+        </p>
+
+      </form>
+
+      <div class="mt-4 text-center text-muted small">
+        © 2024 LabManager Pro. Todos los derechos reservados. | 
+        <a href="#" class="text-primary">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+</div>
