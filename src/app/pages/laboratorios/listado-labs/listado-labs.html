@@ -36,12 +36,12 @@
           <label class="form-label fw-semibold">Estado:</label>
           <select class="form-select">
             <option value="">Todos</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
+            <option value="true">Habilitado</option>
+            <option value="false">Deshabilitado</option>
           </select>
         </div>
 
-        <!-- BOTÓN AGREGAR (NO SE EXPANDE) -->
+        <!-- BOTÓN AGREGAR -->
         <div class="col-12 col-md-4  col-lg-2 text-lg-end align-items-center">
           <label class="form-label d-none d-lg-block">&nbsp;</label>
           <a
@@ -53,15 +53,33 @@
           </a>
         </div>
 
+        <!-- Estado de Carga -->
+        <div *ngIf="isLoading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2 text-muted">Cargando laboratorios...</p>
+        </div>
+
+        <!-- Mensaje de Error -->
+        <div *ngIf="error" class="alert alert-danger mt-3" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ error }}
+          <button (click)="cargarLaboratorios()" class="btn btn-sm btn-outline-danger ms-3">
+            <i class="bi bi-arrow-clockwise"></i> Reintentar
+          </button>
+        </div>
+
         <!-- Tabla -->
-        <div class="table-responsive mt-4">
+        <div class="table-responsive mt-4" *ngIf="!isLoading && !error">
           <table class="table align-middle">
             <thead>
               <tr>
                 <th><input type="checkbox" class="form-check-input" /></th>
                 <th>Laboratorio</th>
-                <th>Ubicación</th>
-                <th>Contacto</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Tipos de Análisis</th>
                 <th>Estado</th>
                 <th class="text-end">Acciones</th>
               </tr>
@@ -76,29 +94,54 @@
                   <small class="text-muted">ID: {{ lab.id }}</small>
                 </td>
 
-                <td>{{ lab.ubicacion }}</td>
-                <td>{{ lab.contacto }}</td>
+                <td>{{ lab.direccion }}</td>
+                <td>{{ lab.telefono }}</td>
+
+                <td>
+                  <div class="d-flex flex-wrap gap-1">
+                    <span 
+                      *ngFor="let tipo of lab.tiposAnalisis.slice(0, 3)" 
+                      class="badge bg-info-subtle text-info"
+                      [title]="tipo.descripcion"
+                    >
+                      {{ tipo.nombre }}
+                    </span>
+                    <span 
+                      *ngIf="lab.tiposAnalisis.length > 3" 
+                      class="badge bg-secondary-subtle text-secondary"
+                    >
+                      +{{ lab.tiposAnalisis.length - 3 }} más
+                    </span>
+                  </div>
+                </td>
 
                 <td>
                   <span
                     class="badge rounded-pill px-3 py-2"
                     [ngClass]="{
-                      'bg-success-subtle text-success': lab.estado === 'Activo',
-                      'bg-danger-subtle text-danger': lab.estado === 'Inactivo',
-                      'bg-warning-subtle text-warning': lab.estado === 'Pendiente'
+                      'bg-success-subtle text-success': lab.habilitado,
+                      'bg-danger-subtle text-danger': !lab.habilitado
                     }"
                   >
-                    {{ lab.estado }}
+                    {{ lab.habilitado ? 'Habilitado' : 'Deshabilitado' }}
                   </span>
                 </td>
 
                 <td class="text-end">
-                  <button class="btn btn-light btn-sm me-2">
+                  <button class="btn btn-light btn-sm me-2" [title]="'Editar ' + lab.nombre">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn btn-light btn-sm text-danger">
+                  <button class="btn btn-light btn-sm text-danger" [title]="'Eliminar ' + lab.nombre">
                     <i class="bi bi-trash"></i>
                   </button>
+                </td>
+              </tr>
+
+              <!-- Mensaje cuando no hay laboratorios -->
+              <tr *ngIf="laboratorios.length === 0">
+                <td colspan="7" class="text-center py-5 text-muted">
+                  <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                  <p class="mb-0">No se encontraron laboratorios</p>
                 </td>
               </tr>
             </tbody>

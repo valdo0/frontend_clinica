@@ -1,27 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Laboratorios, Laboratorio } from '../../../core/services/laboratorios';
 
-interface Laboratorio {
-  id: number;
-  nombre: string;
-  ubicacion: string;
-  contacto?: string;
-  estado?: 'Activo' | 'Inactivo' | 'Pendiente';
-}
 @Component({
   selector: 'app-listado-labs',
-  imports: [CommonModule,RouterLink,FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './listado-labs.html',
   styleUrl: './listado-labs.scss',
 })
-export default class ListadoLabs {
+export default class ListadoLabs implements OnInit {
+  private laboratoriosService = inject(Laboratorios);
+  
+  laboratorios: Laboratorio[] = [];
+  isLoading = false;
+  error: string | null = null;
 
-    laboratorios: Laboratorio[] = [
-    { id: 1, nombre: 'Lab Central', ubicacion: 'Santiago' },
-    { id: 2, nombre: 'Lab Norte', ubicacion: 'Antofagasta' },
-    { id: 3, nombre: 'Lab Sur', ubicacion: 'Concepción' }
-  ];
+  ngOnInit() {
+    this.cargarLaboratorios();
+  }
 
+  cargarLaboratorios() {
+    this.isLoading = true;
+    this.error = null;
+
+    this.laboratoriosService.getLaboratorios().subscribe({
+      next: (laboratorios) => {
+        this.laboratorios = laboratorios;
+        this.isLoading = false;
+        console.log('Laboratorios cargados:', laboratorios);
+      },
+      error: (error) => {
+        console.error('Error al cargar laboratorios:', error);
+        this.error = 'Error al cargar los laboratorios. Por favor, intente nuevamente.';
+        this.isLoading = false;
+      }
+    });
+  }
 }
