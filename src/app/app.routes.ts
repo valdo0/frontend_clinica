@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { LABORATORIOS_ROUTES } from './pages/laboratorios/laboratorios.routes';
+import { USUARIOS_ROUTES } from './pages/usuarios/usuarios.routes';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
@@ -20,7 +21,9 @@ export const routes: Routes = [
     component:MainLayout,
     children:[
         { path:'dashboard',loadComponent:()=>import('./pages/dashboard/dashboard')},
-        { path:'laboratorios',children:LABORATORIOS_ROUTES}
+        { path:'laboratorios',children:LABORATORIOS_ROUTES},
+        { path:'usuarios',children:USUARIOS_ROUTES}
     ]
   },
 ];
+
