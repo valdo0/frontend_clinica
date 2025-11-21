@@ -1,0 +1,69 @@
+<div class="container-fluid p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark">Mis Solicitudes</h2>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="bi bi-funnel"></i>
+            </span>
+            <select class="form-select border-start-0 bg-light" [(ngModel)]="filterEstado">
+              <option value="todos">Todos los estados</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="En Proceso">En Proceso</option>
+              <option value="Completada">Completada</option>
+              <option value="Cancelada">Cancelada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      @if (filteredRequests.length === 0) {
+        <div class="p-5 text-center text-muted">
+          <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+          No se encontraron solicitudes
+        </div>
+      } @else {
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th class="border-0 ps-4">Tipo Análisis</th>
+                <th class="border-0">Fecha Solicitud</th>
+                <th class="border-0">Estado</th>
+                <th class="border-0">Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (req of filteredRequests; track req.id) {
+                <tr>
+                  <td class="ps-4 fw-bold">{{ req.tipo }}</td>
+                  <td class="text-muted">{{ req.fecha }}</td>
+                  <td>
+                    <span class="badge rounded-pill"
+                      [class.bg-warning]="req.estado === 'Pendiente'"
+                      [class.text-dark]="req.estado === 'Pendiente'"
+                      [class.bg-primary]="req.estado === 'En Proceso'"
+                      [class.bg-success]="req.estado === 'Completada'"
+                      [class.bg-danger]="req.estado === 'Cancelada'"
+                    >
+                      {{ req.estado }}
+                    </span>
+                  </td>
+                  <td class="text-muted text-truncate" style="max-width: 200px;" title="{{ req.descripcion }}">
+                    {{ req.descripcion }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>

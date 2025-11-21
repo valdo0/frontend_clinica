@@ -22,7 +22,8 @@ export const routes: Routes = [
     children:[
         { path:'dashboard',loadComponent:()=>import('./pages/dashboard/dashboard')},
         { path:'laboratorios',children:LABORATORIOS_ROUTES},
-        { path:'usuarios',children:USUARIOS_ROUTES}
+        { path:'usuarios',children:USUARIOS_ROUTES},
+        { path:'paciente', loadChildren: () => import('./pages/paciente/paciente.routes').then(m => m.PACIENTE_ROUTES) }
     ]
   },
 ];

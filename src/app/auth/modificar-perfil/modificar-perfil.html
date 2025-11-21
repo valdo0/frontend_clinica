@@ -1,1 +1,96 @@
-<p>modificar-perfil works!</p>
+<div class="container-fluid p-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+          <h4 class="mb-0 fw-bold text-dark">Modificar Perfil</h4>
+        </div>
+        <div class="card-body p-4">
+          <form (ngSubmit)="onSubmit()" #form="ngForm">
+            <div class="row g-3">
+              <!-- Read-only fields -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Email</label>
+                <input 
+                  type="email" 
+                  [value]="email" 
+                  disabled
+                  class="form-control bg-light"
+                >
+                <div class="form-text">El email no se puede modificar</div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Rol</label>
+                <input 
+                  type="text" 
+                  [value]="rol" 
+                  disabled
+                  class="form-control bg-light"
+                >
+                <div class="form-text">El rol no se puede modificar</div>
+              </div>
+
+              <!-- Editable fields -->
+              <div class="col-12">
+                <label for="nombre" class="form-label fw-bold">Nombre Completo</label>
+                <input 
+                  type="text" 
+                  id="nombre" 
+                  name="nombre" 
+                  [(ngModel)]="nombre" 
+                  required
+                  class="form-control"
+                >
+              </div>
+
+              <div class="col-12">
+                <label for="telefono" class="form-label fw-bold">Teléfono</label>
+                <input 
+                  type="tel" 
+                  id="telefono" 
+                  name="telefono" 
+                  [(ngModel)]="telefono" 
+                  required
+                  class="form-control"
+                >
+              </div>
+
+              <div class="col-12">
+                <label for="password" class="form-label fw-bold">Nueva Contraseña (Opcional)</label>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  [(ngModel)]="password" 
+                  placeholder="Dejar en blanco para mantener la actual"
+                  class="form-control"
+                >
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button 
+                type="button" 
+                class="btn btn-light text-secondary"
+                (click)="resetForm()"
+              >
+                Restaurar
+              </button>
+              <button 
+                type="submit" 
+                [disabled]="!form.valid || isLoading"
+                class="btn btn-primary px-4 d-flex align-items-center gap-2"
+              >
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                }
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
