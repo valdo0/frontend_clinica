@@ -1,15 +1,124 @@
-<div class="container">
-  <h2>Agregar Laboratorio</h2>
-  <form #labForm="ngForm" (ngSubmit)="agregarLab(labForm)">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre del Laboratorio</label>
-      <input type="text" id="nombre" name="nombre" class="form-control" required [(ngModel)]="nombre">
+<div class="modal fade" [class.show]="isModalOpen" [style.display]="isModalOpen ? 'block' : 'none'" 
+     tabindex="-1" aria-labelledby="labModalLabel" [attr.aria-hidden]="!isModalOpen"
+     (click)="onBackdropClick($event)">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="labModalLabel">
+          {{ modo === 'crear' ? 'Agregar Laboratorio' : 'Editar Laboratorio' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrar()" aria-label="Close"></button>
+      </div>
+
+      <form #labForm="ngForm" (ngSubmit)="guardarLaboratorio(labForm)">
+        <div class="modal-body">
+          <!-- Mensaje de Error -->
+          <div *ngIf="error" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ error }}
+          </div>
+
+          <div class="row g-3">
+            <!-- Nombre -->
+            <div class="col-12">
+              <label for="nombre" class="form-label fw-semibold">
+                Nombre del Laboratorio <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                class="form-control"
+                required
+                [(ngModel)]="nombre"
+                placeholder="Ej: Laboratorio Central"
+              />
+            </div>
+
+            <!-- Dirección -->
+            <div class="col-12">
+              <label for="direccion" class="form-label fw-semibold">
+                Dirección <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="direccion"
+                name="direccion"
+                class="form-control"
+                required
+                [(ngModel)]="direccion"
+                placeholder="Ej: Av. Principal 123"
+              />
+            </div>
+
+            <!-- Teléfono -->
+            <div class="col-md-6">
+              <label for="telefono" class="form-label fw-semibold">
+                Teléfono <span class="text-danger">*</span>
+              </label>
+              <input
+                type="tel"
+                id="telefono"
+                name="telefono"
+                class="form-control"
+                required
+                [(ngModel)]="telefono"
+                placeholder="Ej: +56 9 1234 5678"
+              />
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-6">
+              <label for="habilitado" class="form-label fw-semibold">Estado</label>
+              <select id="habilitado" name="habilitado" class="form-select" [(ngModel)]="habilitado">
+                <option [ngValue]="true">Habilitado</option>
+                <option [ngValue]="false">Deshabilitado</option>
+              </select>
+            </div>
+
+            <!-- Tipos de Análisis -->
+            <div class="col-12">
+              <label class="form-label fw-semibold">Tipos de Análisis</label>
+              <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                <div *ngIf="tiposAnalisisDisponibles.length === 0" class="text-muted">
+                  No hay tipos de análisis disponibles
+                </div>
+                <div
+                  *ngFor="let tipo of tiposAnalisisDisponibles"
+                  class="form-check mb-2"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [id]="'tipo-' + tipo.id"
+                    [checked]="isTipoSeleccionado(tipo.id)"
+                    (change)="toggleTipoAnalisis(tipo.id)"
+                  />
+                  <label class="form-check-label" [for]="'tipo-' + tipo.id">
+                    <strong>{{ tipo.nombre }}</strong>
+                    <br />
+                    <small class="text-muted">{{ tipo.descripcion }}</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrar()" [disabled]="isLoading">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!labForm.valid || isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ isLoading ? 'Guardando...' : (modo === 'crear' ? 'Agregar' : 'Guardar Cambios') }}
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="mb-3">
-      <label for="ubicacion" class="form-label">Ubicación</label>
-      <input type="text" id="ubicacion" name="ubicacion" class="form-control" required [(ngModel)]="ubicacion">
-    </div>
-    <button type="submit" class="btn btn-success">Agregar</button>
-    <a routerLink="/laboratorios/lista" class="btn btn-secondary ms-2">Cancelar</a>
-  </form>
+  </div>
 </div>
+
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade" [class.show]="isModalOpen" *ngIf="isModalOpen"></div>
+

@@ -17,7 +17,7 @@ export interface Usuario {
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class User {
   private apiService = inject(ApiService);
   private readonly endpoint = '/usuarios';
 

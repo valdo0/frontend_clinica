@@ -8,6 +8,14 @@
   <!-- Card -->
   <div class="card shadow-sm border-0 rounded-4">
     <div class="card-body p-4">
+      <!-- Botón para gestión de tipos de análisis -->
+      <div class="mb-3">
+        <a routerLink="/laboratorios/tipos-analisis" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-gear-fill me-2"></i>
+          Gestionar Tipos de Análisis
+        </a>
+      </div>
+
       <div class="row g-2 align-items-center mb-3">
         <!-- BUSCADOR -->
         <div class="col-12 col-md-12 col-lg-4">
@@ -44,13 +52,13 @@
         <!-- BOTÓN AGREGAR -->
         <div class="col-12 col-md-4  col-lg-2 text-lg-end align-items-center">
           <label class="form-label d-none d-lg-block">&nbsp;</label>
-          <a
-            routerLink="/laboratorios/agregar"
+          <button
+            (click)="abrirModalAgregar()"
             class="btn btn-primary w-auto px-3 d-flex align-items-center gap-2 mx-auto mx-md-0 "
           >
             <i class="bi bi-plus-lg"></i>
             Agregar
-          </a>
+          </button>
         </div>
 
         <!-- Estado de Carga -->
@@ -128,10 +136,18 @@
                 </td>
 
                 <td class="text-end">
-                  <button class="btn btn-light btn-sm me-2" [title]="'Editar ' + lab.nombre">
+                  <button 
+                    class="btn btn-light btn-sm me-2" 
+                    [title]="'Editar ' + lab.nombre"
+                    (click)="abrirModalEditar(lab)"
+                  >
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn btn-light btn-sm text-danger" [title]="'Eliminar ' + lab.nombre">
+                  <button 
+                    class="btn btn-light btn-sm text-danger" 
+                    [title]="'Eliminar ' + lab.nombre"
+                    (click)="eliminarLaboratorio(lab.id)"
+                  >
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -150,4 +166,7 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal de Laboratorio -->
+  <app-agregar-lab (laboratorioGuardado)="onLaboratorioGuardado()"></app-agregar-lab>
 </div>

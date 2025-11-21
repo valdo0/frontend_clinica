@@ -17,6 +17,14 @@ export interface Laboratorio {
   tiposAnalisis: TipoAnalisis[];
 }
 
+export interface LaboratorioDTO {
+  nombre: string;
+  direccion: string;
+  telefono: string;
+  habilitado: boolean;
+  tiposAnalisisIds: number[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -26,5 +34,17 @@ export class Laboratorios {
 
   getLaboratorios(): Observable<Laboratorio[]> {
     return this.apiService.get<Laboratorio[]>(this.endpoint);
+  }
+
+  createLaboratorio(data: LaboratorioDTO): Observable<Laboratorio> {
+    return this.apiService.post<Laboratorio>(this.endpoint, data);
+  }
+
+  updateLaboratorio(id: number, data: LaboratorioDTO): Observable<Laboratorio> {
+    return this.apiService.put<Laboratorio>(`${this.endpoint}/${id}`, data);
+  }
+
+  deleteLaboratorio(id: number): Observable<void> {
+    return this.apiService.delete<void>(`${this.endpoint}/${id}`);
   }
 }
