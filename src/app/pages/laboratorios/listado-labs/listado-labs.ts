@@ -17,7 +17,13 @@ export default class ListadoLabs implements OnInit {
   private laboratoriosService = inject(Laboratorios);
   
   laboratorios: Laboratorio[] = [];
+  laboratoriosFiltrados: Laboratorio[] = [];
   laboratorioSeleccionado?: Laboratorio;
+  
+  // Filtros
+  busqueda = '';
+  filtroEstado: 'TODOS' | 'HABILITADO' | 'DESHABILITADO' = 'TODOS';
+
   isLoading = false;
   error: string | null = null;
 
@@ -32,6 +38,7 @@ export default class ListadoLabs implements OnInit {
     this.laboratoriosService.getLaboratorios().subscribe({
       next: (laboratorios) => {
         this.laboratorios = laboratorios;
+        this.aplicarFiltros();
         this.isLoading = false;
         console.log('Laboratorios cargados:', laboratorios);
       },
@@ -41,6 +48,27 @@ export default class ListadoLabs implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  aplicarFiltros() {
+    let filtrados = [...this.laboratorios];
+
+    // Filtro por búsqueda (nombre o dirección)
+    if (this.busqueda.trim()) {
+      const busquedaLower = this.busqueda.toLowerCase();
+      filtrados = filtrados.filter(l => 
+        l.nombre.toLowerCase().includes(busquedaLower) ||
+        l.direccion.toLowerCase().includes(busquedaLower)
+      );
+    }
+
+    // Filtro por estado
+    if (this.filtroEstado !== 'TODOS') {
+      const isHabilitado = this.filtroEstado === 'HABILITADO';
+      filtrados = filtrados.filter(l => l.habilitado === isHabilitado);
+    }
+
+    this.laboratoriosFiltrados = filtrados;
   }
 
   abrirModalAgregar() {

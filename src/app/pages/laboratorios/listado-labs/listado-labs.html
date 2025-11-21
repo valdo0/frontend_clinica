@@ -1,172 +1,166 @@
 <div class="lab-container container-fluid py-4">
-  <!-- Título -->
-  <div class="mb-4">
-    <h1 class="fw-bold display-6 text-primary mb-1">Gestión de Laboratorios</h1>
-    <p class="text-muted">Administre, busque y asigne tareas a todos los laboratorios.</p>
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="fw-bold display-6 text-primary mb-1">
+        <i class="bi bi-building-fill me-2"></i>
+        Gestión de Laboratorios
+      </h1>
+      <p class="text-muted mb-0">Administre y asigne tipos de análisis a los laboratorios</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a routerLink="/laboratorios/tipos-analisis" class="btn btn-outline-secondary">
+        <i class="bi bi-clipboard2-pulse-fill me-2"></i>
+        Tipos de Análisis
+      </a>
+      <button (click)="abrirModalAgregar()" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-2"></i>
+        Agregar Laboratorio
+      </button>
+    </div>
   </div>
 
-  <!-- Card -->
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body p-4">
-      <!-- Botón para gestión de tipos de análisis -->
-      <div class="mb-3">
-        <a routerLink="/laboratorios/tipos-analisis" class="btn btn-outline-secondary btn-sm">
-          <i class="bi bi-gear-fill me-2"></i>
-          Gestionar Tipos de Análisis
-        </a>
-      </div>
-
-      <div class="row g-2 align-items-center mb-3">
-        <!-- BUSCADOR -->
-        <div class="col-12 col-md-12 col-lg-4">
-          <label class="form-label fw-semibold">Buscar:</label>
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Buscar..." />
-            <button class="btn btn-outline-primary" type="button">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
+  <!-- Filtros y Búsqueda -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="busqueda" class="form-label fw-semibold">
+            <i class="bi bi-search me-2"></i>Buscar
+          </label>
+          <input
+            type="text"
+            id="busqueda"
+            class="form-control"
+            placeholder="Buscar por nombre o dirección..."
+            [(ngModel)]="busqueda"
+            (ngModelChange)="aplicarFiltros()"
+          />
         </div>
-
-        <!-- FILTRO UBICACIÓN -->
-        <div class="col-12 col-md-4 col-lg-3">
-          <label class="form-label fw-semibold">Ubicación:</label>
-          <select class="form-select">
-            <option value="">Todas</option>
-            <option value="Norte">Norte</option>
-            <option value="Centro">Centro</option>
-            <option value="Sur">Sur</option>
-          </select>
-        </div>
-
-        <!-- FILTRO ESTADO -->
-        <div class="col-12 col-md-4 col-lg-3">
-          <label class="form-label fw-semibold">Estado:</label>
-          <select class="form-select">
-            <option value="">Todos</option>
-            <option value="true">Habilitado</option>
-            <option value="false">Deshabilitado</option>
-          </select>
-        </div>
-
-        <!-- BOTÓN AGREGAR -->
-        <div class="col-12 col-md-4  col-lg-2 text-lg-end align-items-center">
-          <label class="form-label d-none d-lg-block">&nbsp;</label>
-          <button
-            (click)="abrirModalAgregar()"
-            class="btn btn-primary w-auto px-3 d-flex align-items-center gap-2 mx-auto mx-md-0 "
+        <div class="col-md-6">
+          <label for="filtroEstado" class="form-label fw-semibold">
+            <i class="bi bi-funnel-fill me-2"></i>Filtrar por Estado
+          </label>
+          <select
+            id="filtroEstado"
+            class="form-select"
+            [(ngModel)]="filtroEstado"
+            (ngModelChange)="aplicarFiltros()"
           >
-            <i class="bi bi-plus-lg"></i>
-            Agregar
-          </button>
-        </div>
-
-        <!-- Estado de Carga -->
-        <div *ngIf="isLoading" class="text-center py-5">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-          </div>
-          <p class="mt-2 text-muted">Cargando laboratorios...</p>
-        </div>
-
-        <!-- Mensaje de Error -->
-        <div *ngIf="error" class="alert alert-danger mt-3" role="alert">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          {{ error }}
-          <button (click)="cargarLaboratorios()" class="btn btn-sm btn-outline-danger ms-3">
-            <i class="bi bi-arrow-clockwise"></i> Reintentar
-          </button>
-        </div>
-
-        <!-- Tabla -->
-        <div class="table-responsive mt-4" *ngIf="!isLoading && !error">
-          <table class="table align-middle">
-            <thead>
-              <tr>
-                <th><input type="checkbox" class="form-check-input" /></th>
-                <th>Laboratorio</th>
-                <th>Dirección</th>
-                <th>Teléfono</th>
-                <th>Tipos de Análisis</th>
-                <th>Estado</th>
-                <th class="text-end">Acciones</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr *ngFor="let lab of laboratorios">
-                <td><input type="checkbox" class="form-check-input" /></td>
-
-                <td>
-                  <p class="fw-semibold m-0">{{ lab.nombre }}</p>
-                  <small class="text-muted">ID: {{ lab.id }}</small>
-                </td>
-
-                <td>{{ lab.direccion }}</td>
-                <td>{{ lab.telefono }}</td>
-
-                <td>
-                  <div class="d-flex flex-wrap gap-1">
-                    <span 
-                      *ngFor="let tipo of lab.tiposAnalisis.slice(0, 3)" 
-                      class="badge bg-info-subtle text-info"
-                      [title]="tipo.descripcion"
-                    >
-                      {{ tipo.nombre }}
-                    </span>
-                    <span 
-                      *ngIf="lab.tiposAnalisis.length > 3" 
-                      class="badge bg-secondary-subtle text-secondary"
-                    >
-                      +{{ lab.tiposAnalisis.length - 3 }} más
-                    </span>
-                  </div>
-                </td>
-
-                <td>
-                  <span
-                    class="badge rounded-pill px-3 py-2"
-                    [ngClass]="{
-                      'bg-success-subtle text-success': lab.habilitado,
-                      'bg-danger-subtle text-danger': !lab.habilitado
-                    }"
-                  >
-                    {{ lab.habilitado ? 'Habilitado' : 'Deshabilitado' }}
-                  </span>
-                </td>
-
-                <td class="text-end">
-                  <button 
-                    class="btn btn-light btn-sm me-2" 
-                    [title]="'Editar ' + lab.nombre"
-                    (click)="abrirModalEditar(lab)"
-                  >
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button 
-                    class="btn btn-light btn-sm text-danger" 
-                    [title]="'Eliminar ' + lab.nombre"
-                    (click)="eliminarLaboratorio(lab.id)"
-                  >
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </td>
-              </tr>
-
-              <!-- Mensaje cuando no hay laboratorios -->
-              <tr *ngIf="laboratorios.length === 0">
-                <td colspan="7" class="text-center py-5 text-muted">
-                  <i class="bi bi-inbox display-4 d-block mb-3"></i>
-                  <p class="mb-0">No se encontraron laboratorios</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <option value="TODOS">Todos los estados</option>
+            <option value="HABILITADO">Habilitados</option>
+            <option value="DESHABILITADO">Deshabilitados</option>
+          </select>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Laboratorio -->
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3 text-muted">Cargando laboratorios...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !isLoading" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ error }}
+  </div>
+
+  <!-- Tabla de Laboratorios -->
+  <div *ngIf="!isLoading && !error" class="card">
+    <div class="card-body">
+      <!-- Lista vacía -->
+      <div *ngIf="laboratoriosFiltrados.length === 0" class="text-center py-5">
+        <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+        <p class="mt-3 text-muted">
+          {{ busqueda || filtroEstado !== 'TODOS' 
+            ? 'No se encontraron laboratorios con los filtros aplicados.' 
+            : 'No hay laboratorios registrados.' 
+          }}
+        </p>
+      </div>
+
+      <!-- Tabla -->
+      <div *ngIf="laboratoriosFiltrados.length > 0" class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Tipos de Análisis</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lab of laboratoriosFiltrados">
+              <td>
+                <div class="fw-semibold">{{ lab.nombre }}</div>
+              </td>
+              <td>
+                <i class="bi bi-geo-alt me-2 text-muted"></i>
+                {{ lab.direccion }}
+              </td>
+              <td>
+                <i class="bi bi-telephone me-2 text-muted"></i>
+                {{ lab.telefono }}
+              </td>
+              <td>
+                <span
+                  class="badge"
+                  [ngClass]="lab.habilitado ? 'bg-success' : 'bg-secondary'"
+                >
+                  {{ lab.habilitado ? 'Habilitado' : 'Deshabilitado' }}
+                </span>
+              </td>
+              <td>
+                <span
+                  *ngFor="let tipo of lab.tiposAnalisis"
+                  class="badge bg-primary me-1"
+                >
+                  {{ tipo.nombre }}
+                </span>
+                <span *ngIf="!lab.tiposAnalisis || lab.tiposAnalisis.length === 0" class="text-muted">
+                  Sin tipos asignados
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="btn-group" role="group">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="abrirModalEditar(lab)"
+                    title="Editar laboratorio"
+                  >
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="eliminarLaboratorio(lab.id)"
+                    title="Eliminar laboratorio"
+                  >
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Resumen -->
+      <div *ngIf="laboratoriosFiltrados.length > 0" class="mt-3 text-muted">
+        <small>
+          Mostrando {{ laboratoriosFiltrados.length }} de {{ laboratorios.length }} laboratorios
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Agregar/Editar -->
   <app-agregar-lab (laboratorioGuardado)="onLaboratorioGuardado()"></app-agregar-lab>
 </div>

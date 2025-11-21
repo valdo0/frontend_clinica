@@ -1,0 +1,71 @@
+<div class="modal fade" [class.show]="isModalOpen" [style.display]="isModalOpen ? 'block' : 'none'" 
+     tabindex="-1" aria-labelledby="tipoModalLabel" [attr.aria-hidden]="!isModalOpen"
+     (click)="onBackdropClick($event)">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tipoModalLabel">
+          {{ modo === 'crear' ? 'Agregar Tipo de Análisis' : 'Editar Tipo de Análisis' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrar()" aria-label="Close"></button>
+      </div>
+
+      <form #tipoForm="ngForm" (ngSubmit)="guardarTipo(tipoForm)">
+        <div class="modal-body">
+          <!-- Mensaje de Error -->
+          <div *ngIf="error" class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ error }}
+          </div>
+
+          <div class="row g-3">
+            <!-- Nombre -->
+            <div class="col-12">
+              <label for="nombre" class="form-label fw-semibold">
+                Nombre del Tipo de Análisis <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                class="form-control"
+                required
+                [(ngModel)]="nombre"
+                placeholder="Ej: Glucosa en sangre"
+              />
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-12">
+              <label for="descripcion" class="form-label fw-semibold">
+                Descripción <span class="text-danger">*</span>
+              </label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                class="form-control"
+                rows="3"
+                required
+                [(ngModel)]="descripcion"
+                placeholder="Ej: Mide el nivel de azúcar en la sangre. Indicado para diagnóstico de diabetes."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrar()" [disabled]="isLoading">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!tipoForm.valid || isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ isLoading ? 'Guardando...' : (modo === 'crear' ? 'Crear Tipo' : 'Guardar Cambios') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade" [class.show]="isModalOpen" *ngIf="isModalOpen"></div>

@@ -7,7 +7,7 @@ export interface Usuario {
   nombre: string;
   email: string;
   telefono: string;
-  rol: 'USER' | 'ADMIN';
+ rol: 'ADMIN' | 'LABMANAGER' | 'PACIENTE'
   fechaCreacion?: string;
   activo?: boolean;
 }
@@ -16,7 +16,7 @@ export interface UsuarioDTO {
   nombre: string;
   email: string;
   telefono: string;
-  rol: 'USER' | 'ADMIN';
+  rol: 'ADMIN' | 'LABMANAGER' | 'PACIENTE';
   password: string;
 }
 

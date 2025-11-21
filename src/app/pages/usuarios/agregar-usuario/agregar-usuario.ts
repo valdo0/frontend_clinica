@@ -25,7 +25,7 @@ export default class AgregarUsuario implements OnInit {
   email = '';
   telefono = '';
   password = '';
-  rol: 'USER' | 'ADMIN' = 'USER';
+  rol: 'ADMIN' | 'LABMANAGER' | 'PACIENTE' = 'PACIENTE';
   
   isLoading = false;
   error: string | null = null;
@@ -60,7 +60,7 @@ export default class AgregarUsuario implements OnInit {
     this.email = '';
     this.telefono = '';
     this.password = '';
-    this.rol = 'USER';
+    this.rol = 'PACIENTE';
   }
 
   guardarUsuario(form: NgForm) {

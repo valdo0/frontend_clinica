@@ -1,27 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TiposAnalisisService, TipoAnalisis, TipoAnalisisDTO } from '../../../core/services/tipos-analisis';
+import { TiposAnalisisService, TipoAnalisis } from '../../../core/services/tipos-analisis';
+import AgregarTipoAnalisis from '../agregar-tipo-analisis/agregar-tipo-analisis';
 
 @Component({
   selector: 'app-tipos-analisis',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink, AgregarTipoAnalisis],
   templateUrl: './tipos-analisis.html',
   styleUrl: './tipos-analisis.scss',
 })
 export default class TiposAnalisis implements OnInit {
+  @ViewChild(AgregarTipoAnalisis) modalTipo!: AgregarTipoAnalisis;
+  
   private tiposAnalisisService = inject(TiposAnalisisService);
 
   tiposAnalisis: TipoAnalisis[] = [];
   isLoading = false;
   error: string | null = null;
-
-  // Form fields
-  nombre = '';
-  descripcion = '';
-  isSaving = false;
-  mostrarFormulario = false;
 
   ngOnInit() {
     this.cargarTiposAnalisis();
@@ -45,43 +41,14 @@ export default class TiposAnalisis implements OnInit {
     });
   }
 
-  toggleFormulario() {
-    this.mostrarFormulario = !this.mostrarFormulario;
-    if (!this.mostrarFormulario) {
-      this.resetForm();
-    }
+  abrirModalAgregar() {
+    this.modalTipo.modo = 'crear';
+    this.modalTipo.tipoAnalisis = undefined;
+    this.modalTipo.abrir();
   }
 
-  resetForm() {
-    this.nombre = '';
-    this.descripcion = '';
-  }
-
-  crearTipoAnalisis(form: NgForm) {
-    if (form.valid) {
-      this.isSaving = true;
-      this.error = null;
-
-      const data: TipoAnalisisDTO = {
-        nombre: this.nombre,
-        descripcion: this.descripcion
-      };
-
-      this.tiposAnalisisService.createTipoAnalisis(data).subscribe({
-        next: () => {
-          console.log('Tipo de análisis creado exitosamente');
-          this.isSaving = false;
-          this.resetForm();
-          form.reset();
-          this.mostrarFormulario = false;
-          this.cargarTiposAnalisis();
-        },
-        error: (error) => {
-          console.error('Error al crear tipo de análisis:', error);
-          this.error = 'Error al crear el tipo de análisis. Por favor, intente nuevamente.';
-          this.isSaving = false;
-        }
-      });
-    }
+  onTipoGuardado() {
+    console.log('Tipo guardado, recargando lista...');
+    this.cargarTiposAnalisis();
   }
 }
