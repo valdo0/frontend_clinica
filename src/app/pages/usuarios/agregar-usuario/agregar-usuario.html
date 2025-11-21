@@ -99,7 +99,8 @@
                 [(ngModel)]="rol"
                 [disabled]="!isAdmin"
               >
-                <option value="USER">Usuario</option>
+                <option value="PACIENTE">Paciente</option>
+                <option value="LABMANAGER">Lab Manager</option>
                 <option value="ADMIN">Administrador</option>
               </select>
               <small class="text-muted" *ngIf="!isAdmin">
