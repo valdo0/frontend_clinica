@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecuperarPassword } from './recuperar-password';
+import RecuperarPassword from './recuperar-password';
 
 describe('RecuperarPassword', () => {
   let component: RecuperarPassword;

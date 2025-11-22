@@ -1,6 +1,5 @@
 <div class="min-vh-100 d-flex flex-column flex-lg-row">
 
-  <!-- Panel decorativo -->
   <div class="d-none d-lg-flex col-lg-5 bg-primary text-white p-5 position-relative">
     <div class="position-absolute top-0 start-0 w-100 h-100" 
          style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTE9ItoquODWCARhInxnNrQVINkCFJCpfSJt7_-8SfK63ZBt_FiPDSYJKm4vx5g9Qaw9_fqd3v46y7Unnp1j3gtm3n5U0aBiFpFQzlJDSGnoX6B3b-znLv1Vm9vWopS6Vft6HXFFmIYz-2gOdu9mWpgjPjTOKeBJnYWVuwRtpDg6PD9npWVIHCEbmdRlzbu9392dF1M_nElqEPIVRHTR8scKj-7HjpziyEk1aW90hTqxPZDGTOWJ6s7SBi6qAhr5gimf2gIUk-mbE'); 
@@ -16,16 +15,12 @@
       <p>Complete sus datos para crear una cuenta segura.</p>
     </div>
   </div>
-
-  <!-- Formulario -->
   <div class="col-12 col-lg-7 d-flex align-items-center justify-content-center p-5 bg-light">
     <div class="w-100" style="max-width: 480px;">
       <h1 class="mb-2 text-center">Crear cuenta</h1>
       <p class="text-center text-muted mb-4">Ingrese sus datos para registrarse en el sistema.</p>
 
       <form [formGroup]="form" (ngSubmit)="registrar()" class="d-flex flex-column gap-3">
-
-        <!-- Nombre -->
         <div class="mb-3">
           <label class="form-label">Nombre</label>
           <input formControlName="nombre" type="text" 
@@ -36,8 +31,6 @@
             Nombre inválido
           </div>
         </div>
-
-        <!-- Email -->
         <div class="mb-3">
           <label class="form-label">Email</label>
           <input formControlName="email" type="email" 
@@ -49,7 +42,17 @@
           </div>
         </div>
 
-        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label">Teléfono</label>
+          <input formControlName="telefono" type="tel" 
+                 class="form-control" 
+                 [ngClass]="{'is-invalid': telefono?.invalid && telefono?.touched}" 
+                 placeholder="Ingrese su teléfono">
+          <div class="invalid-feedback" *ngIf="telefono?.invalid && telefono?.touched">
+            Teléfono inválido (mínimo 9 dígitos)
+          </div>
+        </div>
+
         <div class="mb-3 position-relative">
           <label class="form-label">Contraseña</label>
           <div class="input-group">
@@ -67,7 +70,6 @@
           </div>
         </div>
 
-        <!-- Confirm Password -->
         <div class="mb-3 position-relative">
           <label class="form-label">Confirmar Contraseña</label>
           <div class="input-group">
@@ -85,7 +87,17 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 mt-3">Registrarse</button>
+        <div class="alert alert-danger" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Registrarse</span>
+          <span *ngIf="isLoading">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Registrando...
+          </span>
+        </button>
       </form>
 
       <div class="mt-4 text-center">

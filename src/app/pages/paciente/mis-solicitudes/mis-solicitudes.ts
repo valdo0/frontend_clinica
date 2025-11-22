@@ -1,15 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
-interface Solicitud {
-  id: number;
-  tipo: string;
-  fecha: string;
-  estado: 'Pendiente' | 'En Proceso' | 'Cancelada' | 'Completada';
-  descripcion: string;
-}
+import { AnalisisService } from '../../../core/services/analisis';
+import { AnalisisResponseDTO, EstadoAnalisis } from '../../../core/models';
+import { Auth } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-mis-solicitudes',
@@ -18,22 +13,54 @@ interface Solicitud {
   templateUrl: './mis-solicitudes.html',
   styleUrl: './mis-solicitudes.scss'
 })
-export default class MisSolicitudes {
+export default class MisSolicitudes implements OnInit {
   filterEstado: string = 'todos';
+  solicitudes: AnalisisResponseDTO[] = [];
+  isLoading = true;
+  error: string | null = null;
 
-  // Mock data
-  solicitudes: Solicitud[] = [
-    { id: 1, tipo: 'Hemograma Completo', fecha: '2023-11-20', estado: 'Pendiente', descripcion: 'Chequeo anual rutinario' },
-    { id: 2, tipo: 'Perfil Lipídico', fecha: '2023-11-18', estado: 'En Proceso', descripcion: 'Control de colesterol' },
-    { id: 3, tipo: 'Examen de Orina', fecha: '2023-11-15', estado: 'Cancelada', descripcion: 'Error en la solicitud' },
-    { id: 4, tipo: 'Glucosa en Ayunas', fecha: '2023-11-21', estado: 'Pendiente', descripcion: 'Sospecha de diabetes' },
-    { id: 5, tipo: 'Perfil Hepático', fecha: '2023-11-10', estado: 'Completada', descripcion: 'Control post-tratamiento' }
-  ];
+  private authService = inject(Auth);
+  private analisisService = inject(AnalisisService);
 
-  get filteredRequests(): Solicitud[] {
+  ngOnInit() {
+    this.loadSolicitudes();
+  }
+
+  loadSolicitudes() {
+    this.isLoading = true;
+    this.error = null;
+    const user = this.authService.getUser();
+
+    this.analisisService.getAllByUser(user!.id).subscribe({
+      next: (data) => {
+        this.solicitudes = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading solicitudes:', err);
+        this.error = 'No se pudieron cargar las solicitudes.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  get filteredRequests(): AnalisisResponseDTO[] {
     if (this.filterEstado === 'todos') {
       return this.solicitudes;
     }
     return this.solicitudes.filter(s => s.estado === this.filterEstado);
+  }
+
+  getEstadoBadgeClass(estado: EstadoAnalisis): string {
+    switch (estado) {
+      case 'PENDIENTE':
+        return 'bg-warning text-dark';
+      case 'TERMINADO':
+        return 'bg-success';
+      case 'CANCELADO':
+        return 'bg-danger';
+      default:
+        return 'bg-secondary';
+    }
   }
 }

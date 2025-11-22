@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Laboratorios, Laboratorio, LaboratorioDTO } from '../../../core/services/laboratorios';
-import { TiposAnalisisService, TipoAnalisis } from '../../../core/services/tipos-analisis';
+import { Laboratorios } from '../../../core/services/laboratorios';
+import { TiposAnalisisService } from '../../../core/services/tipos-analisis';
+import { Laboratorio, LaboratorioDTO, TipoAnalisis } from '../../../core/models';
 
 @Component({
   selector: 'app-agregar-lab',

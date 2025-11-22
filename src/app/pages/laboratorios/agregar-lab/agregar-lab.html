@@ -12,14 +12,13 @@
 
       <form #labForm="ngForm" (ngSubmit)="guardarLaboratorio(labForm)">
         <div class="modal-body">
-          <!-- Mensaje de Error -->
+
           <div *ngIf="error" class="alert alert-danger" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
             {{ error }}
           </div>
 
           <div class="row g-3">
-            <!-- Nombre -->
             <div class="col-12">
               <label for="nombre" class="form-label fw-semibold">
                 Nombre del Laboratorio <span class="text-danger">*</span>
@@ -35,7 +34,6 @@
               />
             </div>
 
-            <!-- Dirección -->
             <div class="col-12">
               <label for="direccion" class="form-label fw-semibold">
                 Dirección <span class="text-danger">*</span>
@@ -51,7 +49,6 @@
               />
             </div>
 
-            <!-- Teléfono -->
             <div class="col-md-6">
               <label for="telefono" class="form-label fw-semibold">
                 Teléfono <span class="text-danger">*</span>
@@ -67,7 +64,6 @@
               />
             </div>
 
-            <!-- Estado -->
             <div class="col-md-6">
               <label for="habilitado" class="form-label fw-semibold">Estado</label>
               <select id="habilitado" name="habilitado" class="form-select" [(ngModel)]="habilitado">
@@ -76,7 +72,6 @@
               </select>
             </div>
 
-            <!-- Tipos de Análisis -->
             <div class="col-12">
               <label class="form-label fw-semibold">Tipos de Análisis</label>
               <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
@@ -119,6 +114,5 @@
   </div>
 </div>
 
-<!-- Modal backdrop -->
 <div class="modal-backdrop fade" [class.show]="isModalOpen" *ngIf="isModalOpen"></div>
 

@@ -28,6 +28,11 @@ export const roleGuard: CanActivateFn = (route, state) => {
     showConfirmButton: false
   });
   
-  router.navigate(['/dashboard']);
+  // Redirect to appropriate page based on user role
+  if (user.rol === 'PACIENTE') {
+    router.navigate(['/paciente/mis-solicitudes']);
+  } else {
+    router.navigate(['/dashboard']);
+  }
   return false;
 };

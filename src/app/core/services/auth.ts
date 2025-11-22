@@ -1,20 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api';
 import { Observable, tap } from 'rxjs';
+import { LoginRequest, RegisterRequest, Usuario } from '../models';
 
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface Usuario {
-  id: number;
-  nombre: string;
-  email: string;
-  telefono: string;
-  fechaRegistro: string;
-  rol: 'ADMIN' | 'LABMANAGER' | 'PACIENTE';
-}
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +15,10 @@ export class Auth {
     return this.apiService.post<Usuario>('auth/login', credentials).pipe(
       tap(user => this.saveUser(user))
     );
+  }
+
+  register(data: RegisterRequest): Observable<Usuario> {
+    return this.apiService.post<Usuario>('auth/register', data);
   }
 
   private saveUser(user: Usuario): void {
@@ -44,5 +36,9 @@ export class Auth {
 
   isLoggedIn(): boolean {
     return !!this.getUser();
+  }
+
+  updateUser(user: Usuario): void {
+    this.saveUser(user);
   }
 }

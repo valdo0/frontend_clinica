@@ -1,17 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from './api';
 import { Observable } from 'rxjs';
+import { TipoAnalisis, TipoAnalisisDTO } from '../models';
 
-export interface TipoAnalisis {
-  id: number;
-  nombre: string;
-  descripcion: string;
-}
-
-export interface TipoAnalisisDTO {
-  nombre: string;
-  descripcion: string;
-}
 
 @Injectable({
   providedIn: 'root',

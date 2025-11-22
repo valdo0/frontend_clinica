@@ -1,6 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../../core/services/auth';
+import { Usuario } from '../../core/models';
+import { ApiService } from '../../core/services/api';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+
+interface UpdateUsuarioRequest {
+  nombre: string;
+  telefono: string;
+  password?: string;
+}
 
 @Component({
   selector: 'app-modificar-perfil',
@@ -10,7 +21,9 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './modificar-perfil.scss',
 })
 export default class ModificarPerfil implements OnInit {
-  // Form fields
+  private authService = inject(Auth);
+  private apiService = inject(ApiService);
+  private router = inject(Router);
   nombre = '';
   email = '';
   telefono = '';
@@ -18,21 +31,20 @@ export default class ModificarPerfil implements OnInit {
   password = '';
   
   isLoading = false;
-
-  // Mock initial data
-  private currentUser = {
-    nombre: 'Juan Pérez',
-    email: 'juan.perez@example.com',
-    telefono: '+56 9 1234 5678',
-    rol: 'PACIENTE'
-  };
+  currentUser: Usuario | null = null;
 
   ngOnInit() {
     this.loadUserData();
   }
 
   loadUserData() {
-    // Simulate loading data
+    this.currentUser = this.authService.getUser();
+    
+    if (!this.currentUser) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+
     this.nombre = this.currentUser.nombre;
     this.email = this.currentUser.email;
     this.telefono = this.currentUser.telefono;
@@ -41,26 +53,47 @@ export default class ModificarPerfil implements OnInit {
   }
 
   onSubmit() {
+    if (!this.currentUser) {
+      alert('Error: No hay usuario autenticado');
+      return;
+    }
+
     this.isLoading = true;
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Perfil actualizado:', {
-        nombre: this.nombre,
-        telefono: this.telefono,
-        password: this.password ? '[CHANGED]' : '[UNCHANGED]'
+    const updateData: UpdateUsuarioRequest = {
+      nombre: this.nombre,
+      telefono: this.telefono
+    };
+
+    if (this.password && this.password.trim() !== '') {
+      updateData.password = this.password;
+    }
+    this.apiService.put<Usuario>(`usuarios/${this.currentUser.id}`, updateData)
+      .subscribe({
+        next: (updatedUser) => {
+          this.authService.updateUser(updatedUser);
+          this.currentUser = updatedUser;
+          
+          Swal.fire({
+            icon: 'success',
+            title: 'Perfil actualizado exitosamente',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.password = '';
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error al actualizar perfil:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al actualizar el perfil',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.isLoading = false;
+        }
       });
-      
-      alert('Perfil actualizado exitosamente (Simulación)');
-      this.isLoading = false;
-      
-      // Update mock "current" state
-      this.currentUser = {
-        ...this.currentUser,
-        nombre: this.nombre,
-        telefono: this.telefono
-      };
-    }, 1000);
   }
 
   resetForm() {

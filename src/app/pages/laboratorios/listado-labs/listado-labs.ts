@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Laboratorios, Laboratorio } from '../../../core/services/laboratorios';
+import { Laboratorios } from '../../../core/services/laboratorios';
+import { Laboratorio } from '../../../core/models';
 import AgregarLab from '../agregar-lab/agregar-lab';
 
 @Component({
@@ -19,8 +20,7 @@ export default class ListadoLabs implements OnInit {
   laboratorios: Laboratorio[] = [];
   laboratoriosFiltrados: Laboratorio[] = [];
   laboratorioSeleccionado?: Laboratorio;
-  
-  // Filtros
+
   busqueda = '';
   filtroEstado: 'TODOS' | 'HABILITADO' | 'DESHABILITADO' = 'TODOS';
 
@@ -53,7 +53,6 @@ export default class ListadoLabs implements OnInit {
   aplicarFiltros() {
     let filtrados = [...this.laboratorios];
 
-    // Filtro por búsqueda (nombre o dirección)
     if (this.busqueda.trim()) {
       const busquedaLower = this.busqueda.toLowerCase();
       filtrados = filtrados.filter(l => 
@@ -62,7 +61,6 @@ export default class ListadoLabs implements OnInit {
       );
     }
 
-    // Filtro por estado
     if (this.filtroEstado !== 'TODOS') {
       const isHabilitado = this.filtroEstado === 'HABILITADO';
       filtrados = filtrados.filter(l => l.habilitado === isHabilitado);

@@ -3,11 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 import { ConfigService } from './config';
+import { ApiRequestOptions } from '../models';
 
-export interface ApiRequestOptions {
-  headers?: HttpHeaders | { [header: string]: string | string[] };
-  params?: HttpParams | { [param: string]: string | string[] };
-}
 
 
 @Injectable({

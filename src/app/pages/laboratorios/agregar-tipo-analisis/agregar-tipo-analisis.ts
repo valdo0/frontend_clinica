@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { TiposAnalisisService, TipoAnalisis, TipoAnalisisDTO } from '../../../core/services/tipos-analisis';
+import { TiposAnalisisService } from '../../../core/services/tipos-analisis';
+import { TipoAnalisis, TipoAnalisisDTO } from '../../../core/models';
 
 @Component({
   selector: 'app-agregar-tipo-analisis',
@@ -16,10 +17,8 @@ export default class AgregarTipoAnalisis {
 
   private tiposAnalisisService = inject(TiposAnalisisService);
   
-  // Modal state
   isModalOpen = false;
   
-  // Form fields
   nombre = '';
   descripcion = '';
   
@@ -61,7 +60,7 @@ export default class AgregarTipoAnalisis {
 
       const request = this.modo === 'crear'
         ? this.tiposAnalisisService.createTipoAnalisis(data)
-        : this.tiposAnalisisService.createTipoAnalisis(data); // Ajustar cuando haya update
+        : this.tiposAnalisisService.createTipoAnalisis(data);
 
       request.subscribe({
         next: () => {

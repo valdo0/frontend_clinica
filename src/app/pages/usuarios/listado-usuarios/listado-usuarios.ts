@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UsuariosService, Usuario } from '../../../core/services/usuarios';
+import { UsuariosService } from '../../../core/services/usuarios';
+import { Usuario } from '../../../core/models';
 import AgregarUsuario from '../agregar-usuario/agregar-usuario';
 
 @Component({
@@ -18,14 +19,12 @@ export default class ListadoUsuarios implements OnInit {
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] = [];
   
-  // Filtros
   busqueda = '';
   filtroRol: 'TODOS' | 'USER' | 'ADMIN' = 'TODOS';
   
   isLoading = false;
   error: string | null = null;
 
-  // Simular que el usuario actual es admin (ajustar según implementación real)
   isCurrentUserAdmin = true;
 
   ngOnInit() {
@@ -53,7 +52,6 @@ export default class ListadoUsuarios implements OnInit {
   aplicarFiltros() {
     let filtrados = [...this.usuarios];
 
-    // Filtro por búsqueda (nombre o email)
     if (this.busqueda.trim()) {
       const busquedaLower = this.busqueda.toLowerCase();
       filtrados = filtrados.filter(u => 
@@ -62,7 +60,6 @@ export default class ListadoUsuarios implements OnInit {
       );
     }
 
-    // Filtro por rol
     if (this.filtroRol !== 'TODOS') {
       filtrados = filtrados.filter(u => u.rol === this.filtroRol);
     }

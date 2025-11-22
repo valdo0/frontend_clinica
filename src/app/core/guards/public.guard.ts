@@ -9,7 +9,9 @@ export const publicGuard: CanActivateFn = (route, state) => {
   if (!authService.isLoggedIn()) {
     return true;
   }
-
+  if(authService.getUser()?.rol === 'PACIENTE') {
+    router.navigate(['/paciente/mis-solicitudes']);
+  }
   router.navigate(['/dashboard']);
   return false;
 };

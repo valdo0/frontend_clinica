@@ -8,19 +8,42 @@
         <div class="card-body p-4">
           <form (ngSubmit)="onSubmit()" #form="ngForm">
             <div class="mb-4">
+              <label for="laboratorio" class="form-label fw-bold">Laboratorio</label>
+              <select 
+                id="laboratorio" 
+                name="laboratorio" 
+                [(ngModel)]="laboratorioId" 
+                (ngModelChange)="onLaboratorioChange()"
+                required
+                class="form-select"
+              >
+                <option [value]="null" disabled selected>Seleccione un laboratorio</option>
+                @for (lab of laboratorios; track lab.id) {
+                  <option [value]="lab.id">{{ lab.nombre }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-4">
               <label for="tipoAnalisis" class="form-label fw-bold">Tipo de Análisis</label>
               <select 
                 id="tipoAnalisis" 
                 name="tipoAnalisis" 
-                [(ngModel)]="tipoAnalisis" 
+                [(ngModel)]="tipoAnalisisId" 
+                [disabled]="!laboratorioId"
                 required
                 class="form-select"
               >
-                <option value="" disabled selected>Seleccione un tipo de análisis</option>
-                @for (tipo of tiposAnalisis; track tipo) {
-                  <option [value]="tipo">{{ tipo }}</option>
+                <option [value]="null" disabled selected>
+                  {{ laboratorioId ? 'Seleccione un tipo de análisis' : 'Primero seleccione un laboratorio' }}
+                </option>
+                @for (tipo of availableTiposAnalisis; track tipo.id) {
+                  <option [value]="tipo.id">{{ tipo.nombre }}</option>
                 }
               </select>
+              @if (laboratorioId && availableTiposAnalisis.length === 0) {
+                <small class="text-muted">Este laboratorio no tiene tipos de análisis disponibles.</small>
+              }
             </div>
 
             <div class="mb-4">
@@ -30,7 +53,6 @@
                 name="descripcion" 
                 [(ngModel)]="descripcion" 
                 rows="4" 
-                required
                 placeholder="Describa el motivo de la solicitud..."
                 class="form-control"
               ></textarea>
@@ -46,10 +68,15 @@
               </button>
               <button 
                 type="submit" 
-                [disabled]="!form.valid"
+                [disabled]="!form.valid || isLoading"
                 class="btn btn-primary px-4"
               >
-                <i class="bi bi-send me-2"></i>Enviar Solicitud
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Enviando...
+                } @else {
+                  <i class="bi bi-send me-2"></i>Enviar Solicitud
+                }
               </button>
             </div>
           </form>

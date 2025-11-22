@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ModificarPerfil } from './modificar-perfil';
+import ModificarPerfil from './modificar-perfil';
 
 describe('ModificarPerfil', () => {
   let component: ModificarPerfil;

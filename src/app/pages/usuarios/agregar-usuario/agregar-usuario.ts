@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { UsuariosService, Usuario, UsuarioDTO } from '../../../core/services/usuarios';
+import { UsuariosService } from '../../../core/services/usuarios';
+import { Usuario, UsuarioDTO } from '../../../core/models';
 
 @Component({
   selector: 'app-agregar-usuario',
@@ -16,11 +17,9 @@ export default class AgregarUsuario implements OnInit {
   @Output() usuarioGuardado = new EventEmitter<void>();
 
   private usuariosService = inject(UsuariosService);
-  
-  // Modal state
+
   isModalOpen = false;
   
-  // Form fields
   nombre = '';
   email = '';
   telefono = '';
@@ -31,7 +30,7 @@ export default class AgregarUsuario implements OnInit {
   error: string | null = null;
 
   ngOnInit() {
-    // Initialization if needed
+
   }
 
   abrir() {
@@ -40,7 +39,7 @@ export default class AgregarUsuario implements OnInit {
       this.email = this.usuario.email;
       this.telefono = this.usuario.telefono;
       this.rol = this.usuario.rol;
-      this.password = ''; // No prellenar password en modo editar
+      this.password = ''; 
     } else {
       this.resetForm();
     }
@@ -65,9 +64,7 @@ export default class AgregarUsuario implements OnInit {
 
   guardarUsuario(form: NgForm) {
     if (form.valid) {
-      // En modo editar, password es opcional
       if (this.modo === 'editar' && !this.password) {
-        // Si no hay password, no lo incluimos en el DTO
       } else if (this.modo === 'crear' && !this.password) {
         this.error = 'La contraseña es requerida para crear un usuario.';
         return;
@@ -83,7 +80,6 @@ export default class AgregarUsuario implements OnInit {
         rol: this.rol
       };
 
-      // Solo incluir password si se proveyó
       if (this.password) {
         data.password = this.password;
       }

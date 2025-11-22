@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TiposAnalisisService, TipoAnalisis } from '../../../core/services/tipos-analisis';
+import { TiposAnalisisService } from '../../../core/services/tipos-analisis';
+import { TipoAnalisis } from '../../../core/models';
 import AgregarTipoAnalisis from '../agregar-tipo-analisis/agregar-tipo-analisis';
 
 @Component({
