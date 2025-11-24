@@ -28,3 +28,19 @@ export interface RegisterRequest {
   password: string;
   telefono: string;
 }
+
+export interface RequestPasswordRecoveryDTO {
+  email: string;
+}
+
+export interface ResetPasswordDTO {
+  email: string;
+  codigo: string;
+  nuevaPassword: string;
+}
+
+export interface PasswordRecoveryResponseDTO {
+  mensaje: string;
+  codigo: string;
+}
+

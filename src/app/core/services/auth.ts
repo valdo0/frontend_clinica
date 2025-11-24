@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api';
 import { Observable, tap } from 'rxjs';
-import { LoginRequest, RegisterRequest, Usuario } from '../models';
+import { LoginRequest, RegisterRequest, Usuario, RequestPasswordRecoveryDTO, ResetPasswordDTO, PasswordRecoveryResponseDTO } from '../models';
 
 
 @Injectable({
@@ -36,6 +36,14 @@ export class Auth {
 
   isLoggedIn(): boolean {
     return !!this.getUser();
+  }
+
+  requestPasswordRecovery(data: RequestPasswordRecoveryDTO): Observable<PasswordRecoveryResponseDTO> {
+    return this.apiService.post<PasswordRecoveryResponseDTO>('auth/request-password-recovery', data);
+  }
+
+  resetPassword(data: ResetPasswordDTO): Observable<string> {
+    return this.apiService.post<string>('auth/reset-password', data);
   }
 
   updateUser(user: Usuario): void {
