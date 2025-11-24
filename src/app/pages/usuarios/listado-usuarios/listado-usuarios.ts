@@ -21,7 +21,7 @@ export default class ListadoUsuarios implements OnInit {
   
   busqueda = '';
   filtroRol: 'TODOS' | 'USER' | 'ADMIN' = 'TODOS';
-  
+
   isLoading = false;
   error: string | null = null;
 
@@ -105,6 +105,12 @@ export default class ListadoUsuarios implements OnInit {
   }
 
   getRolBadgeClass(rol: string): string {
-    return rol === 'ADMIN' ? 'bg-danger' : 'bg-primary';
+    switch (rol) {
+      case 'admin': return 'bg-danger';
+      case 'labmanager': return 'bg-warning text-dark';
+      case 'paciente': return 'bg-success';
+      case 'ADMIN': return 'bg-danger'; // Fallback
+      default: return 'bg-secondary';
+    }
   }
 }
