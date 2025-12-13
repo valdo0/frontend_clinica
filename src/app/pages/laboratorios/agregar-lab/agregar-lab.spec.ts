@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgregarLab } from './agregar-lab';
+import AgregarLab from './agregar-lab';
 
 describe('AgregarLab', () => {
   let component: AgregarLab;
